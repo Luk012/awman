@@ -46,7 +46,7 @@ public class outtakeController {
     ElapsedTime lift_timer = new ElapsedTime();
     ElapsedTime fourbar_timer = new ElapsedTime();
 
-    public void update(robotMap r, liftController lift, fourbarController fourbar, clawFlipController clawFlip, clawAngleController clawAngle, doorController door, latchRightController latchRight, latchLeftController latchLeft)
+    public void update(robotMap r, liftController lift, fourbarController fourbar, clawFlipController clawFlip, clawAngleController clawAngle, doorController door, latchRightController latchRight, latchLeftController latchLeft, transferController transfer)
     {
         if(CS != PS || CS == INITIALIZE || CS == SCORE_FOURBAR || CS == SCORE_LIFT || CS == SCORE_CLAW || CS == COLLECT_LIFT || CS == COLLLECT_CLAW || CS == COLLECT_FOURBAR || CS == SCORE_DONE || CS == COLLECT_DONE)
         {
@@ -59,9 +59,10 @@ public class outtakeController {
 
                 case SCORE_FOURBAR:
                 {
-                    fourbar.CS = fourbarController.fourbarStatus.SCORE;
+                    if(transfer.CS == transferController.transferStatus.TRANSFER_DONE || transfer.CS == transferController.transferStatus.INITIALIZE)
+                    {  fourbar.CS = fourbarController.fourbarStatus.SCORE;
                     lift_timer.reset();
-                    CS = SCORE_LIFT;
+                    CS = SCORE_LIFT;}
                     break;
                 }
 

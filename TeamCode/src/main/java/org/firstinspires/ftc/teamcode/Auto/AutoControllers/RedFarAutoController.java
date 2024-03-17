@@ -151,7 +151,7 @@ public class RedFarAutoController {
 
             case TRANSFER_DRIVE_POSE:
             {
-                if(fourbar_timer.seconds() > 0.35)
+                if(fourbar_timer.seconds() > 0.32)
                 {
                     fourbar.CS = fourbarController.fourbarStatus.DRIVE;
                 }
@@ -159,7 +159,7 @@ public class RedFarAutoController {
                 {
                     clawFlip.CS = clawFlipController.clawFlipStatus.DRIVE;
                 }
-                if(fourbar_timer.seconds() > 0.37)
+                if(fourbar_timer.seconds() > 0.39)
                 {
                   CurrentStatus = autoControllerStatus.TRANSFER_DONE;
                 }
@@ -262,28 +262,26 @@ public class RedFarAutoController {
 
             case SCORE_CYCLE_BEGIN:
             {
+                fourbar.CS = fourbarController.fourbarStatus.SCORE;
+                lift.pid = 1;
+                lift.CS = liftController.liftStatus.CYCLE;
                 clawAngle.clawAngle_i = 6;
                 clawAngle.CS = clawAngleController.clawAngleStatus.SCORE;
-                fourbar.CS = fourbarController.fourbarStatus.SCORE;
-                clawFlip.CS = clawFlipController.clawFlipStatus.SCORE;
                 CurrentStatus = autoControllerStatus.SCORE_CYCLE_LIFT;
                 break;
             }
 
-//            case TIMER_CYCLE_RESET:
-//            {
-//                pulamea.reset();
-//                CurrentStatus = autoControllerStatus.SCORE_CYCLE_LIFT;
-//                break;
-//            }
+            case TIMER_CYCLE_RESET:
+            {
+                pulamea.reset();
+                CurrentStatus = autoControllerStatus.SCORE_CYCLE_LIFT;
+                break;
+            }
 
             case SCORE_CYCLE_LIFT:
             {
+                clawFlip.CS = clawFlipController.clawFlipStatus.SCORE;
 
-                    door.CS = doorController.doorStatus.CLOSED;
-                    lift.pid = 1;
-                    lift.CS = liftController.liftStatus.CYCLE;
-                    claw_timer.reset();
                     CurrentStatus = autoControllerStatus.SCORE_CYCLE_DONE;
 
                 break;

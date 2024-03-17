@@ -62,7 +62,7 @@ public class RedFarBun extends LinearOpMode {
         GO_SCORE_CYCLE,
         PREPARE_SCORE_CYCLE,
         SCORE_CYCLE,
-        
+
 
         NOTHING
     }
@@ -74,7 +74,7 @@ public class RedFarBun extends LinearOpMode {
      * purple
      */
 
-    public static double x_purple_preload_right = -42.5, y_purple_preload_right = -26, angle_purple_preload_right = 176;
+    public static double x_purple_preload_right = -44, y_purple_preload_right = -26, angle_purple_preload_right = 183;
     public static double x_purple_preload_center = -54, y_purple_preload_center = -26, angle_purple_preload_center = 177;
     public static double x_purple_preload_left = -62, y_purple_preload_left = -26, angle_purple_preload_left = 170;
 
@@ -82,7 +82,7 @@ public class RedFarBun extends LinearOpMode {
      * yellow
      */
 
-    public static double x_yellow_preload_right = 41, y_yellow_preload_right = -43.5, angle_yellow_preload_right = 183;
+    public static double x_yellow_preload_right = 41, y_yellow_preload_right = -38, angle_yellow_preload_right = 182;
     public static double x_yellow_preload_center = 41, y_yellow_preload_center = -29, angle_yellow_preload_center = 180;
     public static double x_yellow_preload_left = 41, y_yellow_preload_left = -25, angle_yellow_preload_left = 180;
 
@@ -95,11 +95,11 @@ public class RedFarBun extends LinearOpMode {
     public static double x_collect_middle = -20, y_collect_middle = -6.5, angle_collect_middle = 195;
 
 
-    public static double x_inter_collect_cycle_2 = 30, y_inter_collect_cycle_2 = -5, angle_inter_collect_cycle_2 = 181;
-    public static double x_collect_cycle_2 = -22.6, y_collect_cycle_2 = -6, angle_collect_cycle_2 = 181;
+    public static double x_inter_collect_cycle_2 = 30, y_inter_collect_cycle_2 = -4.2, angle_inter_collect_cycle_2 = 180;
+    public static double x_collect_cycle_2 = -16.5, y_collect_cycle_2 = -4.2, angle_collect_cycle_2 = 180;
 
-    public static double x_inter_collect_cycle_3 = 30, y_inter_collect_cycle_3 = -9, angle_inter_collect_cycle_3 = 182;
-    public static double x_collect_cycle_3 = -22.6, y_collect_cycle_3 = -9, angle_collect_cycle_3 = 182;
+    public static double x_inter_collect_cycle_3 = 30, y_inter_collect_cycle_3 = -5, angle_inter_collect_cycle_3 = 181;
+    public static double x_collect_cycle_3 = -22, y_collect_cycle_3 = -5, angle_collect_cycle_3 = 181;
     
     public static double x_inter_collect_cycle_4 = 30, y_inter_collect_cycle_4 = -9, angle_inter_collect_cycle_4 = 181;
     public static double x_collect_cycle_4 = -22.6, y_collect_cycle_4 = -8, angle_collect_cycle_4 = 187;
@@ -111,9 +111,9 @@ public class RedFarBun extends LinearOpMode {
 
     public static double x_score = 47, y_score = -10, angle_score = 150;
 
-    public static double x_score_second_cycle = 48, y_score_second_cycle = -8.5, angle_score_second_angle = 150;
-    public static double x_score_third_cycle = 48, y_score_third_cycle = -7, angle_score_third_angle = 150;
-    public static double x_score_forth_cycle = 48, y_score_forth_cycle = -5.5, angle_score_forth_angle = 150;
+    public static double x_score_second_cycle = 47.5, y_score_second_cycle = -7, angle_score_second_angle = 150;
+    public static double x_score_third_cycle = 47.5, y_score_third_cycle = -6.5, angle_score_third_angle = 150;
+    public static double x_score_forth_cycle = 47, y_score_forth_cycle = -5.5, angle_score_forth_angle = 150;
 
 
 
@@ -121,7 +121,7 @@ public class RedFarBun extends LinearOpMode {
      * intern collect
      */
 
-    public static double x_inter_collect_first_cycle = -38, y_inter_collect_first_cycle = -5, angle_inter_collect_first_cycle = 180;
+    public static double x_inter_collect_first_cycle = -44, y_inter_collect_first_cycle = -5, angle_inter_collect_first_cycle = 180;
 
     /**
      * intern score
@@ -503,7 +503,7 @@ public class RedFarBun extends LinearOpMode {
 
                 case YELLOW_DROP:
                 {
-                    if(r.back.getDistance(DistanceUnit.CM) < 21.5)
+                    if(r.back.getDistance(DistanceUnit.CM) < 20.8)
                     {
                         redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.LATCH_DROP;
 
@@ -586,11 +586,11 @@ public class RedFarBun extends LinearOpMode {
 
                 case GO_SCORE_CYCLE:
                 {
-                    if(extendo_timer.seconds() > 0.1)
-                    { r.collect.setPower(-1);}
+                    if(extendo_timer.seconds() > 0.2)
+                    { r.collect.setPower(0);}
                     if(extendo_timer.seconds() > 0.3)
                     {
-                        r.collect.setPower(0);
+                        r.collect.setPower(-1);
                         status = STROBOT.PREPARE_SCORE_CYCLE;
                     }
                     switch (nrcicluri)
@@ -619,10 +619,10 @@ public class RedFarBun extends LinearOpMode {
                 }
 
                 case PREPARE_SCORE_CYCLE:
-                {
+                {r.collect.setPower(0);
                     if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.TRANSFER_DONE)
                     {
-                        redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.SCORE_YELLOW_BEGIN;
+                        redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.SCORE_CYCLE_BEGIN;
                         nrcicluri +=1;
                         score.reset();
                         status = STROBOT.SCORE_CYCLE;
@@ -632,7 +632,7 @@ public class RedFarBun extends LinearOpMode {
 
                 case SCORE_CYCLE:
                 {
-                    if(!drive.isBusy() && redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.SCORE_YELLOW_DONE && score.seconds() > 0.25)
+                    if(!drive.isBusy() && redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.SCORE_CYCLE_DONE && score.seconds() > 0.25)
                     {
                         redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.LATCH_DROP;
 

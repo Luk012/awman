@@ -160,7 +160,7 @@ public class RedFar extends LinearOpMode {
         lift.update(r, 0, voltage);
         extendo.update(r, 0, 1, voltage);
         transfer.update(r, door, fourbar, clawAngle, clawFlip, latchLeft, latchRight, extendo);
-        outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft);
+        outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft, transfer);
         latchDrop.update(r, latchRight, latchLeft, clawAngle);
         collectAngle.update(r);
         for (LynxModule hub : allHubs) {
@@ -390,7 +390,7 @@ lift.CS = liftController.liftStatus.DOWN;
             lift.update(r, position, voltage);
             extendo.update(r, extendopos, 1, voltage);
             transfer.update(r, door, fourbar, clawAngle, clawFlip, latchLeft, latchRight, extendo);
-            outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft);
+            outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft, transfer);
             latchDrop.update(r, latchRight, latchLeft, clawAngle);
             collectAngle.update(r);
 

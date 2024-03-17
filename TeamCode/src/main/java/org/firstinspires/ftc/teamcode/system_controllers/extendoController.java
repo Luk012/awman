@@ -39,7 +39,7 @@ public class extendoController {
     public static double retracted = -7;
     public static double extended = 900;
     public static double drive = 600;
-    public static double purple[] = {415, 160, 375};
+    public static double purple[] = {375, 160, 375};
     public static double cycle[] = {920, 920, 920};
     public static int cycle_i = 0;
     public static int caz = 0;

@@ -15,6 +15,8 @@ import static org.firstinspires.ftc.teamcode.system_controllers.outtakeControlle
 import static org.firstinspires.ftc.teamcode.system_controllers.outtakeController.outtakeStatus.SCORE_FOURBAR;
 import static org.firstinspires.ftc.teamcode.system_controllers.ptoController.ptoStatus.OFF;
 import static org.firstinspires.ftc.teamcode.system_controllers.ptoController.ptoStatus.ON;
+import static org.firstinspires.ftc.teamcode.system_controllers.transferController.transferStatus.TRANSFER_DONE;
+import static org.firstinspires.ftc.teamcode.system_controllers.transferController.transferStatus.TRANSFER_DRIVE_POSE;
 import static org.firstinspires.ftc.teamcode.system_controllers.transferController.transferStatus.TRANSFER_EXTENDO;
 
 import android.annotation.SuppressLint;
@@ -143,7 +145,7 @@ public class opMode extends LinearOpMode {
         lift.update(r, 0, voltage);
         extendo.update(r, 0, 1, voltage);
         transfer.update(r, door, fourbar, clawAngle, clawFlip, latchLeft, latchRight, extendo);
-        outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft);
+        outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft, transfer);
         latchDrop.update(r, latchRight, latchLeft, clawAngle);
         collectAngle.update(r);
 
@@ -325,7 +327,7 @@ public class opMode extends LinearOpMode {
             {
                 if(lift.CS != UP)
                 {
-                    PrecisionDenominatorAngle = 0.5;
+                     PrecisionDenominatorAngle = 0.5;
                     outtake.CS = SCORE_FOURBAR;
                 }
                 else
@@ -420,7 +422,7 @@ public class opMode extends LinearOpMode {
             lift.update(r, position_lift, voltage);
             extendo.update(r, position_extendo, 1, voltage);
             transfer.update(r, door, fourbar, clawAngle, clawFlip, latchLeft, latchRight, extendo);
-            outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft);
+            outtake.update(r, lift, fourbar, clawFlip, clawAngle, door, latchRight, latchLeft, transfer);
             latchDrop.update(r, latchRight, latchLeft, clawAngle);
 
             double loop = System.nanoTime();
@@ -430,13 +432,15 @@ public class opMode extends LinearOpMode {
             loopTime = loop;
 
 
-            telemetry.addData("collectangle", collectAngle.CS);
-            telemetry.addData("collectanglei", collectAngle_i);
-            telemetry.addData("fourbarstatus", fourbar.CS);
-            telemetry.addData("liftpos", r.lift.getCurrentPosition());
-            telemetry.addData("amps extendo left", r.extendoLeft.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("amps extendo right", r.extendoRight.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("amps lift", r.lift.getCurrent(CurrentUnit.AMPS));
+//            telemetry.addData("collectangle", collectAngle.CS);
+//            telemetry.addData("collectanglei", collectAngle_i);
+//            telemetry.addData("fourbarstatus", fourbar.CS);
+//            telemetry.addData("liftpos", r.lift.getCurrentPosition());
+//            telemetry.addData("outtake",outtake.CS);
+//            telemetry.addData("transfer",transfer.CS);
+//            telemetry.addData("amps extendo left", r.extendoLeft.getCurrent(CurrentUnit.AMPS));
+//            telemetry.addData("amps extendo right", r.extendoRight.getCurrent(CurrentUnit.AMPS));
+//            telemetry.addData("amps lift", r.lift.getCurrent(CurrentUnit.AMPS));
 //            telemetry.addData("x", poseEstimate.getX());
 //            telemetry.addData("y", poseEstimate.getY());
 //            telemetry.addData("heading", poseEstimate.getHeading());

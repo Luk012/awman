@@ -117,7 +117,7 @@ public class transferController {
                     {
                         clawFlip.CS = clawFlipController.clawFlipStatus.DRIVE;
                     }
-                    if(fourbar_timer.seconds() > 0.75)
+                    if(fourbar_timer.seconds() > 0.42)
                     {
                         door_timer.reset();
                         CS = TRANSFER_DONE;
