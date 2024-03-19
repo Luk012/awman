@@ -65,7 +65,9 @@ public class RedFarBun extends LinearOpMode {
         PREPARE_SCORE_CYCLE,
         SCORE_CYCLE,
         FAIL_SAFE,
+        FAIL_SAFE_ONE_PIXEL,
         FAIL_SAFE_WRONG_HEADING,
+        FAIL_SAFE_WRONG_HEADING_ONE_PIXEL,
 
 
         NOTHING
@@ -712,6 +714,7 @@ public class RedFarBun extends LinearOpMode {
                 {
                     if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_DONE)
                     {
+                        failsafe.reset();
                         status = STROBOT.COLLECT_VERIF_PIXLES_V2;
                     } else if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_WRONG_HEADING)
                     {
@@ -767,7 +770,62 @@ public class RedFarBun extends LinearOpMode {
                         extendo.CS = extendoController.extendoStatus.RETRACTED;
                         extendo_timer.reset();
                         status = STROBOT.GO_SCORE_CYCLE;
+                    } else if(failsafe.seconds() > 0.5)
+                    {
+                        redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.FAIL_SAFE_ONE_PIXEL;
+                        status = STROBOT.FAIL_SAFE_ONE_PIXEL;
                     }
+                    break;
+                }
+
+                case FAIL_SAFE_ONE_PIXEL:
+                {
+                    if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_DONE_ONE_PIXEL)
+                    {
+                        failsafe.reset();
+                        status = STROBOT.GO_SCORE_CYCLE;
+                    } else if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_WRONG_HEADING_ONE_PIXEL)
+                    {
+                        extendo.CS = extendoController.extendoStatus.RETRACTED;
+                        r.collect.setPower(0);
+                        failsafe.reset();
+                        status = STROBOT.FAIL_SAFE_WRONG_HEADING_ONE_PIXEL;
+                    }
+                    break;
+                }
+
+                case FAIL_SAFE_WRONG_HEADING_ONE_PIXEL:
+                {
+                    if(failsafe.seconds() > 1.5)
+                    {   collectAngle.CS = collectAngleController.collectAngleStatus.COLLECT;
+                        r.collect.setPower(1);
+
+                        switch (nrcicluri)
+                        {
+                            case 0:
+                            {
+                                collectAngle.collectAngle_i = 3;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+                            case 1:
+                            {
+                                collectAngle.collectAngle_i = 1;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+                            case 2:
+                            {
+                                collectAngle.collectAngle_i = 0;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+
+                        }
+                        status = STROBOT.COLLECT_VERIF_PIXLES_V2;}
                     break;
                 }
 

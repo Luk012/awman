@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.system_controllers;
 
 
+import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.CYCLE;
+import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.DRIVE;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.FAIL_SAFE;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.INITIALIZE;
@@ -27,9 +29,26 @@ public class extendoController {
         FAIL_SAFE,
     }
 
-    public static double Kp = 0.0041;
-    public static double Ki = 0.0033;
-    public static double Kd = 0.0033;
+    // PID constants for extension
+    public static double Kp_extend = 0.0041;
+    public static double Ki_extend = 0.0033;
+    public static double Kd_extend = 0.0033;
+
+    // PID constants for retraction
+    public static double Kp_retract = 0.0031; // Example values, adjust based on your needs
+    public static double Ki_retract = 0;
+    public static double Kd_retract = 0;
+
+    public static double Kp_drive = 0.0025; // Example values, adjust as needed
+    public static double Ki_drive = 0.001;
+    public static double Kd_drive = 0.002;
+
+
+
+    SimplePIDController extendoPIDExtend;
+    SimplePIDController extendoPIDRetract;
+    SimplePIDController extendoPIDDrive;
+
 //
 //    public static double Kp = 0.0031;
 //    public static double Ki = 0;
@@ -41,7 +60,7 @@ public class extendoController {
 
     public extendoStatus CS = INITIALIZE, PS = INITIALIZE;
 
-    SimplePIDController extendoPID = null;
+ //   SimplePIDController extendoPID = null;
 
     public static double CurrentPosition = 0;
     public static double retracted = -15;
@@ -58,28 +77,55 @@ public class extendoController {
 
       public extendoController()
       {
-          extendoPID = new SimplePIDController(Kp, Ki, Kd);
-          extendoPID.targetValue = retracted;
-          extendoPID.maxOutput = maxSpeed;
+          extendoPIDExtend = new SimplePIDController(Kp_extend, Ki_extend, Kd_extend);
+          extendoPIDRetract = new SimplePIDController(Kp_retract, Ki_retract, Kd_retract);
+          extendoPIDDrive = new SimplePIDController(Kp_drive, Ki_drive, Kd_drive);
+
+          // Initially, we can set to retract as a default or based on your initial state
+          extendoPIDExtend.targetValue = retracted; // Assuming you start with retraction
+          extendoPIDExtend.maxOutput = maxSpeed;
+
+          extendoPIDRetract.targetValue = retracted;
+          extendoPIDRetract.maxOutput = maxSpeed;
+
+          extendoPIDDrive.targetValue = retracted;
+          extendoPIDDrive.maxOutput = maxSpeed;
       }
 
       public void update(robotMap r, int position, double powerCap, double voltage)
       {
 
-          CurrentPosition = position;
-          double powerColectare = extendoPID.update(position);
-          powerColectare =  Math.max(-powerCap,Math.min(powerColectare* 14 / voltage,powerCap));
-         r.extendoLeft.setPower(powerColectare);
+          SimplePIDController activePID;
+          switch (CS) {
+              case EXTENDED: // Define your conditions
+                  activePID = extendoPIDExtend;
+                  break;
+              case RETRACTED:
+                  activePID = extendoPIDRetract;
+                  break;
+              case CYCLE:
+                  activePID = extendoPIDDrive;
+                  break;
+              default:
+                  activePID = extendoPIDDrive; // Default to the first one or any you prefer
+                  break;
+          }
+
+          // Use the active PID controller for calculations
+          double powerColectare = activePID.update(position);
+          powerColectare = Math.max(-powerCap, Math.min(powerColectare * 14 / voltage, powerCap));
+
+          r.extendoLeft.setPower(powerColectare);
           r.extendoRight.setPower(powerColectare);
 
           if(CS == EXTENDED)
       {
-          extendoPID.targetValue = extended + extend_multiply_index;
+          extendoPIDExtend.targetValue = extended + extend_multiply_index;
       }
 
           if(CS == FAIL_SAFE)
           {
-              extendoPID.targetValue = failsafe + x;
+              extendoPIDExtend.targetValue = failsafe + x;
           }
 
 //          if(CS == SENSOR && CurrentPosition >= auto[ciclu] - 10)
@@ -88,57 +134,57 @@ public class extendoController {
 //              extendoPID.maxOutput = 0.6;
 //          }
 
-         if(CS != PS || CS == INITIALIZE || CS == EXTENDED || CS == RETRACTED || CS == PURPLE )
+         if(CS != PS || CS == INITIALIZE || CS == EXTENDED || CS == RETRACTED || CS == PURPLE || CS == FAIL_SAFE || CS == DRIVE || CS == CYCLE)
          {
              switch (CS)
              {
                  case INITIALIZE:
                  {
-                     extendoPID.targetValue = retracted;
-                     extendoPID.maxOutput = 1;
+                     activePID.targetValue = retracted;
+                     activePID.maxOutput = 1;
                      break;
                  }
 
                  case EXTENDED:
                  {
-                     extendoPID.targetValue = extended + extend_multiply_index;
-                     extendoPID.maxOutput = 1;
+                     activePID.targetValue = extended + extend_multiply_index;
+                     activePID.maxOutput = 1;
                      break;
                  }
 
                  case RETRACTED:
                  {
-                     extendoPID.targetValue = retracted;
-                     extendoPID.maxOutput = 1;
+                     activePID.targetValue = retracted;
+                     activePID.maxOutput = 1;
                      break;
                  }
 
                  case PURPLE:
                  {
-                     extendoPID.targetValue = purple[caz];
-                     extendoPID.maxOutput = 1;
+                     activePID.targetValue = purple[caz];
+                     activePID.maxOutput = 1;
                      //CS = SENSOR;
                      break;
                  }
 
                  case CYCLE:
                  {
-                     extendoPID.targetValue = cycle;
-                     extendoPID.maxOutput = 1;
+                     activePID.targetValue = cycle;
+                     activePID.maxOutput = 1;
                      break;
                  }
 
                  case DRIVE:
                  {
-                     extendoPID.targetValue = drive;
-                     extendoPID.maxOutput = 1;
+                     activePID.targetValue = drive;
+                     activePID.maxOutput = 1;
                      break;
                  }
 
                  case FAIL_SAFE:
                  {
-                     extendoPID.targetValue = failsafe + x;
-                     extendoPID.maxOutput = 0.7;
+                     activePID.targetValue = failsafe + x;
+                     activePID.maxOutput = 0.7;
                              break;
                  }
 

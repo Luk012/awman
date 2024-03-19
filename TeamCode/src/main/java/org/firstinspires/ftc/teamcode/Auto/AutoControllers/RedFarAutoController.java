@@ -63,6 +63,13 @@ public class RedFarAutoController {
         FAIL_SAFE_DONE,
         FAIL_SAFE_WRONG_HEADING,
 
+        FAIL_SAFE_ONE_PIXEL,
+        FAIL_SAFE_CHECK_DISTANCE_ONE_PIXEL,
+        FAIL_SAFE_HEADER_ONE_PIXEL,
+        FAIL_SAFE_HEADER_TIMER_RESET_ONE_PIXEL,
+        FAIL_SAFE_DONE_ONE_PIXEL,
+        FAIL_SAFE_WRONG_HEADING_ONE_PIXEL,
+
 
         LATCH_DROP,
 
@@ -369,7 +376,7 @@ double correct_distance = 0;
 
             case FAIL_SAFE_HEADER:
             {
-                if(r.pixelRight.getState() && r.pixelLeft.getState() && collectAngle.collectAngle_i != 0)
+                if((r.pixelRight.getState() && r.pixelLeft.getState()) && collectAngle.collectAngle_i != 0)
                 {
                     collectAngle.collectAngle_i = Math.max(0, collectAngle.collectAngle_i-1);
                     failsafe_header.reset();
@@ -390,6 +397,71 @@ double correct_distance = 0;
                 if(failsafe_header.seconds() > 0.5)
                 {
                     CurrentStatus = autoControllerStatus.FAIL_SAFE_HEADER;
+                }
+                break;
+            }
+
+
+            case FAIL_SAFE_ONE_PIXEL:
+            {
+                if(distance > distance_error)
+                {
+                    extendo.CS = extendoController.extendoStatus.FAIL_SAFE;
+                    CurrentStatus = autoControllerStatus.FAIL_SAFE_CHECK_DISTANCE_ONE_PIXEL;
+                } else
+                {
+                    CurrentStatus = autoControllerStatus.FAIL_SAFE_HEADER_ONE_PIXEL;
+                }
+                break;
+
+            }
+
+            case FAIL_SAFE_CHECK_DISTANCE_ONE_PIXEL:
+            {
+                if(distance > distance_error && (r.pixelRight.getState() || r.pixelLeft.getState()))
+                {
+                    extendo.x += 20;
+                }
+                else
+                {
+                    if(!r.pixelRight.getState() && !r.pixelLeft.getState())
+                    {
+
+                        extendo.cycle = extendo.failsafe + extendo.x;
+                        extendo.CS = extendoController.extendoStatus.CYCLE;
+                        CurrentStatus = autoControllerStatus.FAIL_SAFE_DONE_ONE_PIXEL;
+                    }
+                    else
+                    {
+                        CurrentStatus = autoControllerStatus.FAIL_SAFE_HEADER_ONE_PIXEL;
+                    }
+                }
+                break;
+            }
+
+            case FAIL_SAFE_HEADER_ONE_PIXEL:
+            {
+                if((r.pixelRight.getState() || r.pixelLeft.getState()) && collectAngle.collectAngle_i != 0)
+                {
+                    collectAngle.collectAngle_i = Math.max(0, collectAngle.collectAngle_i-1);
+                    failsafe_header.reset();
+                    CurrentStatus = autoControllerStatus.FAIL_SAFE_HEADER_TIMER_RESET_ONE_PIXEL;
+                } else if(!r.pixelRight.getState() && !r.pixelLeft.getState())
+                {
+                    CurrentStatus = autoControllerStatus.FAIL_SAFE_DONE_ONE_PIXEL;
+                } else
+                {
+                    CurrentStatus = autoControllerStatus.FAIL_SAFE_WRONG_HEADING_ONE_PIXEL;
+                }
+
+                break;
+            }
+
+            case FAIL_SAFE_HEADER_TIMER_RESET_ONE_PIXEL:
+            {
+                if(failsafe_header.seconds() > 0.5)
+                {
+                    CurrentStatus = autoControllerStatus.FAIL_SAFE_HEADER_ONE_PIXEL;
                 }
                 break;
             }
