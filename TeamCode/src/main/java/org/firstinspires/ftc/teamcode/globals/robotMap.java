@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 public class robotMap {
 
@@ -148,6 +149,11 @@ public class robotMap {
 
         extendoLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         collect.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+
+
 
 //        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

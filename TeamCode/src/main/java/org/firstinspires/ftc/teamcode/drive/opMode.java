@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.globals.robotMap;
@@ -128,7 +129,7 @@ public class opMode extends LinearOpMode {
         latchLeft.CS = latchLeftController.LatchLeftStatus.INITIALIZE;
         latchRight.CS = latchRightController.LatchRightStatus.INITIALIZE;
         pto.CS = ptoController.ptoStatus.INITIALIZE;
-        lift.CS = liftController.liftStatus.INITIALIZE;
+        lift.CS = DOWN;
         extendo.CS = extendoController.extendoStatus.INITIALIZE;
         drone.CS = droneController.droneStatus.INITIALIZE;
 
@@ -154,6 +155,8 @@ public class opMode extends LinearOpMode {
          */
 
         boolean StrafesOn = true;
+
+
 
         boolean drone_driver_1 = false;
         boolean drone_driver_2 = false;
@@ -208,6 +211,34 @@ public class opMode extends LinearOpMode {
             /**
              * INITS
              */
+
+            MotorConfigurationType motorConfigurationType = r.leftBack.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.leftBack.setMotorType(motorConfigurationType);
+
+            motorConfigurationType = r.rightBack.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.rightBack.setMotorType(motorConfigurationType);
+
+            motorConfigurationType = r.rightFront.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.rightFront.setMotorType(motorConfigurationType);
+
+            motorConfigurationType = r.leftFront.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.leftFront.setMotorType(motorConfigurationType);
+
+            motorConfigurationType = r.extendoRight.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.extendoRight.setMotorType(motorConfigurationType);
+
+            motorConfigurationType = r.extendoLeft.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.extendoLeft.setMotorType(motorConfigurationType);
+
+            motorConfigurationType = r.lift.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            r.lift.setMotorType(motorConfigurationType);
 
              position_lift = r.lift.getCurrentPosition();
             position_extendo = r.extendoLeft.getCurrentPosition();

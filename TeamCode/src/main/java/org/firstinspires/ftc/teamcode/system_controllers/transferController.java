@@ -109,15 +109,15 @@ public class transferController {
 
                 case TRANSFER_DRIVE_POSE:
                 {
-                    if(fourbar_timer.seconds() > 0.4)
+                    if(fourbar_timer.seconds() > 0.2)
                     {
                         fourbar.CS = fourbarController.fourbarStatus.DRIVE;
                     }
-                    if(fourbar_timer.seconds() > 0.415)
+                    if(fourbar_timer.seconds() > 0.215)
                     {
                         clawFlip.CS = clawFlipController.clawFlipStatus.DRIVE;
                     }
-                    if(fourbar_timer.seconds() > 0.42)
+                    if(fourbar_timer.seconds() > 0.22)
                     {
                         door_timer.reset();
                         CS = TRANSFER_DONE;

@@ -31,13 +31,13 @@ public class liftController {
 //    public static double I1 = 0.0031;
 //    public static double D1 = 0;
 
-//    public static double P1 = 0.0045;
+    public static double P1 = 0.003;
+    public static double I1 = 0.001;
+    public static double D1 = 0.0009;
+//
+//    public static double P1 = 0.0075;
 //    public static double I1 = 0.0012;
 //    public static double D1 = 0.001;
-
-    public static double P1 = 0.0075;
-    public static double I1 = 0.0012;
-    public static double D1 = 0.001;
 
     public static double P2 = 0.03;
     public static double I2 = 0.0031;

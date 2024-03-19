@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.system_controllers;
 
 
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.EXTENDED;
+import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.FAIL_SAFE;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.INITIALIZE;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.PURPLE;
 import static org.firstinspires.ftc.teamcode.system_controllers.extendoController.extendoStatus.RETRACTED;
@@ -23,11 +24,18 @@ public class extendoController {
         PURPLE,
         CYCLE,
         DRIVE,
+        FAIL_SAFE,
     }
 
     public static double Kp = 0.0041;
     public static double Ki = 0.0033;
     public static double Kd = 0.0033;
+//
+//    public static double Kp = 0.0031;
+//    public static double Ki = 0;
+//    public static double Kd = 0;
+
+
 
     public static double maxSpeed = 1;
 
@@ -36,12 +44,13 @@ public class extendoController {
     SimplePIDController extendoPID = null;
 
     public static double CurrentPosition = 0;
-    public static double retracted = -7;
+    public static double retracted = -15;
     public static double extended = 900;
     public static double drive = 600;
-    public static double purple[] = {375, 160, 375};
-    public static double cycle[] = {920, 920, 920};
-    public static int cycle_i = 0;
+    public static double failsafe = 920;
+    public static double purple[] = {390, 165, 0};
+    public static double cycle = 920;
+    public static double x = 10;
     public static int caz = 0;
 
 
@@ -67,6 +76,11 @@ public class extendoController {
       {
           extendoPID.targetValue = extended + extend_multiply_index;
       }
+
+          if(CS == FAIL_SAFE)
+          {
+              extendoPID.targetValue = failsafe + x;
+          }
 
 //          if(CS == SENSOR && CurrentPosition >= auto[ciclu] - 10)
 //          {
@@ -102,14 +116,14 @@ public class extendoController {
                  case PURPLE:
                  {
                      extendoPID.targetValue = purple[caz];
-                     extendoPID.maxOutput = 0.75;
+                     extendoPID.maxOutput = 1;
                      //CS = SENSOR;
                      break;
                  }
 
                  case CYCLE:
                  {
-                     extendoPID.targetValue = cycle[cycle_i];
+                     extendoPID.targetValue = cycle;
                      extendoPID.maxOutput = 1;
                      break;
                  }
@@ -119,6 +133,13 @@ public class extendoController {
                      extendoPID.targetValue = drive;
                      extendoPID.maxOutput = 1;
                      break;
+                 }
+
+                 case FAIL_SAFE:
+                 {
+                     extendoPID.targetValue = failsafe + x;
+                     extendoPID.maxOutput = 0.7;
+                             break;
                  }
 
 

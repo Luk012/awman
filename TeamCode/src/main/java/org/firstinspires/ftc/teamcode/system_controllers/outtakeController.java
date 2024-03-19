@@ -113,7 +113,7 @@ public class outtakeController {
                     }
                     if(claw_timer.seconds() > 0.2)
                     {
-                        clawFlip.CS = clawFlipController.clawFlipStatus.DRIVE;
+                        clawFlip.CS = clawFlipController.clawFlipStatus.COLLECT;
                         CS = COLLECT_LIFT;
 
                     } break;
