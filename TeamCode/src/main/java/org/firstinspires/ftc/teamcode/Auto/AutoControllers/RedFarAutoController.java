@@ -355,14 +355,14 @@ double correct_distance = 0;
             {
                 if(distance > distance_error && (r.pixelRight.getState() && r.pixelLeft.getState()))
                 {
-                    extendo.x += 20;
+                    extendo.x += 1;
                 }
               else
                 {
                     if(!r.pixelRight.getState() || !r.pixelLeft.getState())
                     {
 
-                        extendo.cycle = extendo.failsafe + extendo.x;
+                        extendo.cycle = extendo.failsafe + extendo.x*20;
                         extendo.CS = extendoController.extendoStatus.CYCLE;
                         CurrentStatus = autoControllerStatus.FAIL_SAFE_DONE;
                     }

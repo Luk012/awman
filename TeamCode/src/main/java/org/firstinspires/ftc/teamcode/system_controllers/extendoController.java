@@ -125,7 +125,7 @@ public class extendoController {
 
           if(CS == FAIL_SAFE)
           {
-              extendoPIDExtend.targetValue = failsafe + x;
+              extendoPIDExtend.targetValue = failsafe + x*20;
           }
 
 //          if(CS == SENSOR && CurrentPosition >= auto[ciclu] - 10)
@@ -183,7 +183,7 @@ public class extendoController {
 
                  case FAIL_SAFE:
                  {
-                     activePID.targetValue = failsafe + x;
+                     activePID.targetValue = failsafe + x*20;
                      activePID.maxOutput = 0.7;
                              break;
                  }
