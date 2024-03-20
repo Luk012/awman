@@ -89,9 +89,9 @@ public class BlueOpenCVPipeline extends OpenCvPipeline {
 //        Rect centerRect = new Rect(295, 91, 226, 269);
 //        Rect rightRect = new Rect(521, 91, 119, 269); asta e ala bun
 
-        Rect leftRect = new Rect(1, 212, 304, 148);
-        Rect centerRect = new Rect(305, 212, 226, 148);
-        Rect rightRect = new Rect(521, 212, 119, 148);
+        Rect leftRect = new Rect(150, 160, 154, 200);
+        Rect centerRect = new Rect(315, 160, 160, 200);
+        Rect rightRect = new Rect(531, 160, 109, 200);
 
         region1_Cb = Cb.submat(leftRect);
         region2_Cb = Cb.submat(centerRect);
@@ -179,9 +179,9 @@ public class BlueOpenCVPipeline extends OpenCvPipeline {
         // note that you must not do thresh.release() if you want to return thresh
         // you also need to release the input if you return thresh(release as much as possible)
 
-        Rect leftRect = new Rect(1, 212, 304, 148);
-        Rect centerRect = new Rect(305, 212, 226, 148);
-        Rect rightRect = new Rect(521, 212, 119, 148);
+        Rect leftRect = new Rect(150, 160, 154, 200);
+        Rect centerRect = new Rect(315, 160, 160, 200);
+        Rect rightRect = new Rect(531, 160, 109, 200);
 
         Imgproc.rectangle(input, leftRect, rectColor, 2);
         Imgproc.rectangle(input, centerRect, rectColor, 2);

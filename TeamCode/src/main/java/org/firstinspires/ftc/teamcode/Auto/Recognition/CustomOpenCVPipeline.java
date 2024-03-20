@@ -85,9 +85,9 @@ public class CustomOpenCVPipeline extends OpenCvPipeline {
          * buffer. Any changes to the child affect the parent, and the
          * reverse also holds true.
          */
-        Rect leftRect = new Rect(1, 212, 205, 148);
-        Rect centerRect = new Rect(206, 212, 186, 148);
-        Rect rightRect = new Rect(392, 212, 208, 148);
+        Rect leftRect = new Rect(1, 160, 160, 200);
+        Rect centerRect = new Rect(206, 160, 150, 200);
+        Rect rightRect = new Rect(380, 160, 162, 200);
 
         region1_Cb = Cb.submat(leftRect);
         region2_Cb = Cb.submat(centerRect);
@@ -179,9 +179,9 @@ public class CustomOpenCVPipeline extends OpenCvPipeline {
 //        Rect centerRect = new Rect(214, 91, 213, 269);
 //        Rect rightRect = new Rect(427, 91, 213, 269); asta e ala bun
 
-        Rect leftRect = new Rect(1, 212, 205, 148);
-        Rect centerRect = new Rect(206, 212, 186, 148);
-        Rect rightRect = new Rect(392, 212, 208, 148);
+        Rect leftRect = new Rect(1, 160, 160, 200);
+        Rect centerRect = new Rect(206, 160, 150, 200);
+        Rect rightRect = new Rect(380, 160, 162, 200);
 
         Imgproc.rectangle(input, leftRect, rectColor, 2);
         Imgproc.rectangle(input, centerRect, rectColor, 2);

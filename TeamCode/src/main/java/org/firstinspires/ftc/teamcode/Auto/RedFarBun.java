@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Auto.AutoControllers.RedFarAutoController;
 import org.firstinspires.ftc.teamcode.Auto.Recognition.RedPipelineStackMaster;
 import org.firstinspires.ftc.teamcode.Auto.Recognition.YellowPixelMaster;
 
+import org.firstinspires.ftc.teamcode.DistanceSensorCalibrator;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.opmode.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.globals.robotMap;
@@ -65,7 +66,9 @@ public class RedFarBun extends LinearOpMode {
         PREPARE_SCORE_CYCLE,
         SCORE_CYCLE,
         FAIL_SAFE,
+        FAIL_SAFE_ONE_PIXEL,
         FAIL_SAFE_WRONG_HEADING,
+        FAIL_SAFE_WRONG_HEADING_ONE_PIXEL,
 
 
         NOTHING
@@ -163,8 +166,7 @@ public class RedFarBun extends LinearOpMode {
         RedPipelineStackMaster redLeft = new RedPipelineStackMaster(this);
         redLeft.observeStick();
 
-
-
+        DistanceSensorCalibrator calibrator;
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robotMap r = new robotMap(hardwareMap);
@@ -420,6 +422,9 @@ public class RedFarBun extends LinearOpMode {
 
         waitForStart();
 
+        double[] rawReadings = {28.5, 27.3, 26.2, 24.9, 24.3, 23.6, 28.4, 29.5, 30.6, 31.2, 31.3, 31.6, 32.3, 33.4, 34.5, 35.3, 36.1, 37.8, 37.9, 38};
+        double[] actualDistances = {23, 22, 21.5, 21, 20.5, 20, 22.5, 24, 24.4, 24.6, 25.2, 25.5, 26, 26.6, 27.2, 28.1, 28.9, 29.6, 30, 30.5};
+        calibrator = new DistanceSensorCalibrator(rawReadings, actualDistances);
 
         if (isStopRequested()) return;
 
@@ -619,7 +624,10 @@ public class RedFarBun extends LinearOpMode {
 
                 case YELLOW_DROP:
                 {
-                    if(r.back.getDistance(DistanceUnit.CM) < 20.8)
+                    double rawReading = r.back.getDistance(DistanceUnit.CM);
+                    double calibratedDistance = calibrator.calibrate(rawReading);
+
+                    if(calibratedDistance < 20.3)
                     {
                         redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.LATCH_DROP;
 
@@ -715,6 +723,7 @@ public class RedFarBun extends LinearOpMode {
                 {
                     if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_DONE)
                     {
+                        failsafe.reset();
                         status = STROBOT.COLLECT_VERIF_PIXLES_V2;
                     } else if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_WRONG_HEADING)
                     {
@@ -730,36 +739,37 @@ public class RedFarBun extends LinearOpMode {
                 {
                     if(failsafe.seconds() > 1.5)
                     {   collectAngle.CS = collectAngleController.collectAngleStatus.COLLECT;
-                    r.collect.setPower(1);
+                        r.collect.setPower(1);
 
-                    switch (nrcicluri)
-                    {
-                        case 0:
+                        switch (nrcicluri)
                         {
-                            collectAngle.collectAngle_i = 4;
-                            extendo.CS = extendoController.extendoStatus.CYCLE;
-                            failsafe.reset();
-                            break;
-                        }
-                        case 1:
-                        {
-                            collectAngle.collectAngle_i = 2;
-                            extendo.CS = extendoController.extendoStatus.CYCLE;
-                            failsafe.reset();
-                            break;
-                        }
-                        case 2:
-                        {
-                            collectAngle.collectAngle_i = 0;
-                            extendo.CS = extendoController.extendoStatus.CYCLE;
-                            failsafe.reset();
-                            break;
-                        }
+                            case 0:
+                            {
+                                collectAngle.collectAngle_i = 4;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+                            case 1:
+                            {
+                                collectAngle.collectAngle_i = 2;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+                            case 2:
+                            {
+                                collectAngle.collectAngle_i = 0;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
 
-                    }
-                    status = STROBOT.COLLECT_VERIF_PIXLES;}
+                        }
+                        status = STROBOT.COLLECT_VERIF_PIXLES;}
                     break;
                 }
+
 
 
 
@@ -770,7 +780,63 @@ public class RedFarBun extends LinearOpMode {
                         extendo.CS = extendoController.extendoStatus.RETRACTED;
                         extendo_timer.reset();
                         status = STROBOT.GO_SCORE_CYCLE;
+                    } else if(failsafe.seconds() > 0.5)
+                    {
+                        redFarAutoController.CurrentStatus = RedFarAutoController.autoControllerStatus.FAIL_SAFE_ONE_PIXEL;
+                        status = STROBOT.FAIL_SAFE_ONE_PIXEL;
                     }
+                    break;
+                }
+
+                case FAIL_SAFE_ONE_PIXEL:
+                {
+                    if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_DONE_ONE_PIXEL)
+                    {
+                        extendo.CS = extendoController.extendoStatus.RETRACTED;
+                        failsafe.reset();
+                        status = STROBOT.GO_SCORE_CYCLE;
+                    } else if(redFarAutoController.CurrentStatus == RedFarAutoController.autoControllerStatus.FAIL_SAFE_WRONG_HEADING_ONE_PIXEL)
+                    {
+                        extendo.CS = extendoController.extendoStatus.RETRACTED;
+                        r.collect.setPower(0);
+                        failsafe.reset();
+                        status = STROBOT.FAIL_SAFE_WRONG_HEADING_ONE_PIXEL;
+                    }
+                    break;
+                }
+
+                case FAIL_SAFE_WRONG_HEADING_ONE_PIXEL:
+                {
+                    if(failsafe.seconds() > 1.5)
+                    {   collectAngle.CS = collectAngleController.collectAngleStatus.COLLECT;
+                        r.collect.setPower(1);
+
+                        switch (nrcicluri)
+                        {
+                            case 0:
+                            {
+                                collectAngle.collectAngle_i = 3;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+                            case 1:
+                            {
+                                collectAngle.collectAngle_i = 1;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+                            case 2:
+                            {
+                                collectAngle.collectAngle_i = 0;
+                                extendo.CS = extendoController.extendoStatus.CYCLE;
+                                failsafe.reset();
+                                break;
+                            }
+
+                        }
+                        status = STROBOT.COLLECT_VERIF_PIXLES_V2;}
                     break;
                 }
 

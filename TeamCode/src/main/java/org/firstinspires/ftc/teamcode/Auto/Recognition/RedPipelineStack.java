@@ -85,9 +85,9 @@ public class RedPipelineStack extends OpenCvPipeline {
          * buffer. Any changes to the child affect the parent, and the
          * reverse also holds true.
          */
-        Rect leftRect = new Rect(1, 212, 304, 148);
-        Rect centerRect = new Rect(305, 212, 226, 148);
-        Rect rightRect = new Rect(531, 212, 109, 148);
+        Rect leftRect = new Rect(150, 160, 154, 200);
+        Rect centerRect = new Rect(315, 160, 160, 200);
+        Rect rightRect = new Rect(531, 160, 109, 200);
 
         region1_Cb = Cb.submat(leftRect);
         region2_Cb = Cb.submat(centerRect);
@@ -179,9 +179,9 @@ public class RedPipelineStack extends OpenCvPipeline {
 //        Rect centerRect = new Rect(214, 91, 213, 269);
 //        Rect rightRect = new Rect(427, 91, 213, 269); asta e ala bun
 
-        Rect leftRect = new Rect(1, 212, 304, 148);
-        Rect centerRect = new Rect(305, 212, 226, 148);
-        Rect rightRect = new Rect(531, 212, 109, 148);
+        Rect leftRect = new Rect(150, 160, 154, 200);
+        Rect centerRect = new Rect(315, 160, 160, 200);
+        Rect rightRect = new Rect(531, 160, 109, 200);
 
         Imgproc.rectangle(input, leftRect, rectColor, 2);
         Imgproc.rectangle(input, centerRect, rectColor, 2);
